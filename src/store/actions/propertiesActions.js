@@ -21,11 +21,11 @@ export function errorFetchMSIProperties(error) {
   }
 }
 
-export function fetchMSIProperties() {
+export function fetchMSIProperties(url, credentials) {
   return dispatch => {
     dispatch(requestMSIProperties())
-    return ApiCalls.msiProperties().then(response => {
-      dispatch(successFetchMSIProperties(response, cursor, gameId))
+    return ApiCalls.msiProperties(url, credentials).then(response => {
+      dispatch(successFetchMSIProperties(response))
     }).catch(error => {
       dispatch(errorFetchMSIProperties(error))
       throw (error)

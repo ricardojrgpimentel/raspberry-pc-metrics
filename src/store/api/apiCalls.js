@@ -1,10 +1,9 @@
 class ApiCalls {
-  static msiProperties(url) {
+  static msiProperties(url, credentials) {
     const request = new Request(`${url}`, {
       method: 'GET',
       headers: new Headers({
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Authorization': 'Basic ' + btoa(`${credentials.login}:${credentials.password}`),
       })
     })
     return fetch(request).then(response => {
