@@ -1,19 +1,19 @@
 import React from 'react';
-import Bg from './Bg'
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import './App.css';
+import Background from './components/background/Background'
+import { CircularProgressbar } from 'react-circular-progressbar'
+import 'react-circular-progressbar/dist/styles.css'
+import './App.css'
 
 function App() {
   return (
-    <Bg>
-      <div className="circle-wrap">
-        <CircularProgressbar className='graph' value={66} text={`CPU ${66}%`} />
-        <CircularProgressbar className='graph' value={66} text={`CPU ${66}%`} />
-        <CircularProgressbar className='graph' value={66} text={`CPU ${66}%`} />
-        <CircularProgressbar className='graph' value={66} text={`CPU ${66}%`} />
+    <Background>
+      <div className="columns is-mobile">
+        <CircularProgressbar className='column graph' value={66} text={`CPU ${66}%`} />
+        <CircularProgressbar className='column graph' value={66} text={`RAM ${20}%`} />
+        <CircularProgressbar className='column graph' value={66} text={`GPU ${60}%`} />
+        <CircularProgressbar className='column graph' value={66} text={`SSD ${3}%`} />
       </div>
-    </Bg>
+    </Background>
   )
 }
 

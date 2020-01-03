@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import "./background.css"
 
 class Bg extends React.Component {
 
