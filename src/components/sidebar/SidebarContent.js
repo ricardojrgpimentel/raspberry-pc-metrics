@@ -8,7 +8,7 @@ class SidebarContent extends React.Component {
   constructor() {
     super()
     this.state = {
-      urlInput: 'http://localhost:82/mahm'
+      backgroundInput: ''
     }
 
   }
@@ -20,19 +20,20 @@ class SidebarContent extends React.Component {
   }
 
   handleForm() {
-    //this.props.actions.fetchMSIProperties(this.state.urlInput, { login: "MSIAfterburner", password: 12345 })
+    this.props.actions.fetchMSIProperties(this.state.urlInput, { login: "MSIAfterburner", password: 12345 })
   }
 
   render() {
+    console.log("contentMSIProperties", this.props.contentMSIProperties)
     return (
       <div className="section">
         <div className="container">
           <div className="field">
-            <label className="label">URL</label>
+            <label className="label">Background</label>
             <div className="control">
-              <input name='urlInput' onChange={(e) => this.handleInput(e)} value={this.state.urlInput} className="input" type="text" placeholder="url" />
+              <input name='backgroundInput' onChange={(e) => this.handleInput(e)} value={this.state.backgroundInput} className="input" type="text" placeholder="url" />
             </div>
-            <p className="help">By default http://localhost:82/mahm</p>
+            <p className="help">No background will fall to the default one</p>
           </div>
           <div className="field is-grouped">
             <div className="control">
@@ -53,5 +54,13 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators({ ...propertiesActions }, dispatch)
   }
 }
+
+/* function mapStateToProps(state) {
+  return {
+    loadingMSIProperties: state.propertiesReducer.loadingMSIProperties,
+    errorMSIProperties: state.propertiesReducer.errorMSIProperties,
+    contentMSIProperties: state.propertiesReducer.contentMSIProperties,
+  }
+} */
 
 export default connect(null, mapDispatchToProps)(SidebarContent)

@@ -1,18 +1,15 @@
 class ApiCalls {
-  static msiProperties(url, credentials) {
-    const request = new Request(`${url}`, {
+  static msiProperties() {
+    var requestOptions = {
       method: 'GET',
-      headers: new Headers({
-        'Authorization': 'Basic ' + btoa(`${credentials.login}:${credentials.password}`),
-      })
-    })
-    return fetch(request).then(response => {
-      if (response.status === 200) {
-        return response.json()
-      }
-      return response.json().then(response => { throw (response) })
-    }).catch(error => {
-      throw (error)
-    })
+      redirect: 'follow'
+    };
+
+    return fetch("http://localhost:8080/", requestOptions)
+      .then(response => response.text())
+      .then(result => result)
+      .catch(error => error);
   }
 }
+
+export default ApiCalls

@@ -5,7 +5,7 @@ With multiple options to customize your view experience, from colors to backgrou
 
 This project is build around the .xml file provided by MSI Afterburner Remote Server
 
-## Online Build
+## Online Demo
 Available at https://friendly-tesla-d15e7a.netlify.com/
 
 ## Offline & dev
