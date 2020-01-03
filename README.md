@@ -1,5 +1,11 @@
-# raspberry-pc-metrics
-Dashboard to show pc metrics
+# Raspberry PC Metrics
+This project aims to deliver a simple dashboard to be displayed in a raspberry 4 inch screen.
+With multiple options to customize your view experience.
+
+## Online Build
+Available at https://friendly-tesla-d15e7a.netlify.com/
+
+## Offline & dev
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
