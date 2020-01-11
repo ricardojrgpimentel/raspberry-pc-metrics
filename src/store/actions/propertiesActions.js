@@ -7,10 +7,10 @@ export function requestMSIProperties() {
   }
 }
 
-export function successFetchMSIProperties(response) {
+export function successFetchMSIProperties(response, attempt) {
   return {
     type: types.SUCCESS_FETCH_MSI_PROPERTIES,
-    response
+    response, attempt
   }
 }
 
@@ -21,14 +21,28 @@ export function errorFetchMSIProperties(error) {
   }
 }
 
-export function fetchMSIProperties(url, credentials) {
+export function fetchMSIProperties(attempt) {
   return dispatch => {
     dispatch(requestMSIProperties())
-    return ApiCalls.msiProperties(url, credentials).then(response => {
-      dispatch(successFetchMSIProperties(response))
+    return ApiCalls.msiProperties().then(response => {
+      dispatch(successFetchMSIProperties(response, attempt))
     }).catch(error => {
       dispatch(errorFetchMSIProperties(error))
       throw (error)
     })
+  }
+}
+
+
+export function updateTimeInterval(timer) {
+  return dispatch => {
+    dispatch(intervalTime(timer))
+  }
+}
+
+export function intervalTime(timer) {
+  return {
+    type: types.INTERVAL_TIME,
+    timer
   }
 }

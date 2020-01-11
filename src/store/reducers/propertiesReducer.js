@@ -17,9 +17,16 @@ export default function propertiesReducer(state = initialState.propertiesReducer
       }
     case types.SUCCESS_FETCH_MSI_PROPERTIES:
       return {
+        ...state,
         loadingMSIProperties: false,
         errorMSIProperties: false,
-        contentMSIProperties: action.response
+        contentMSIProperties: action.response,
+        attemptMSIProperties: action.attempt
+      }
+    case types.INTERVAL_TIME:
+      return {
+        ...state,
+        intervalTime: action.timer,
       }
     default:
       return state

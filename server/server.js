@@ -4,7 +4,7 @@ const express = require('express')
 const app = express()
 
 
-app.get('/', (req, res) => {
+app.get('/', (req, res, next) => {
   console.log('get /')
   let options = {
     'method': 'GET',
@@ -17,26 +17,28 @@ app.get('/', (req, res) => {
     'maxRedirects': 20
   };
 
-  let request = http.request(options, function (response) {
+  let request = http.request(options, (response) => {
+    console.log("response", response.statusCode)
     let chunks = [];
 
-    response.on("data", function (chunk) {
-      chunks.push(chunk);
-    });
+    response.on("data", chunk => {
+      chunks.push(chunk)
+    })
 
-    response.on("end", function (chunk) {
+    response.on("end", chunk => {
       let body = Buffer.concat(chunks);
-      console.log("sending body")
       res.header("Access-Control-Allow-Origin", "*")
       res.set('Content-Type', 'text/xml')
       res.send(body.toString())
     })
 
-    response.on("error", function (error) {
-      console.error(error)
+    response.on("error", error => {
+      throw new Error('BROKEN', error)
     })
   })
-
+  request.on('error', error => {
+    next(error)
+  })
   request.end()
 })
 

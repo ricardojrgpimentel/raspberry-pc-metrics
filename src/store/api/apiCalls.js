@@ -5,10 +5,14 @@ class ApiCalls {
       redirect: 'follow'
     };
 
-    return fetch("http://localhost:8080/", requestOptions)
-      .then(response => response.text())
-      .then(result => result)
-      .catch(error => error);
+    return fetch("http://localhost:8080/", requestOptions).then(response => {
+      if (response.status === 200) {
+        return response.text()
+      }
+      return response.json().then(response => { throw (response) })
+    }).catch(error => {
+      throw (error)
+    })
   }
 }
 

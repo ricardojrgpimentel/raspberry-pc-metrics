@@ -8,9 +8,19 @@ class SidebarContent extends React.Component {
   constructor() {
     super()
     this.state = {
-      backgroundInput: ''
+      backgroundInput: '',
+      updateTimeInput: 5,
     }
+  }
 
+  componentDidMount() {
+    let settings = window.localStorage.getItem('settings')
+    if (settings) {
+      let settingsObj = JSON.parse(settings)
+      this.setState({
+        ...settingsObj
+      })
+    }
   }
 
   handleInput(e) {
@@ -19,12 +29,18 @@ class SidebarContent extends React.Component {
     })
   }
 
+  writeStateToLocalStorage() {
+    window.localStorage.setItem('settings', JSON.stringify(this.state))
+  }
+
   handleForm() {
-    this.props.actions.fetchMSIProperties(this.state.urlInput, { login: "MSIAfterburner", password: 12345 })
+    this.writeStateToLocalStorage()
+    this.props.actions.fetchMSIProperties(this.props.attemptMSIProperties + 1)
+    this.props.actions.updateTimeInterval(this.state.updateTimeInput)
+    this.props.closeSidebar()
   }
 
   render() {
-    console.log("contentMSIProperties", this.props.contentMSIProperties)
     return (
       <div className="section">
         <div className="container">
@@ -34,6 +50,13 @@ class SidebarContent extends React.Component {
               <input name='backgroundInput' onChange={(e) => this.handleInput(e)} value={this.state.backgroundInput} className="input" type="text" placeholder="url" />
             </div>
             <p className="help">No background will fall to the default one</p>
+          </div>
+          <div className="field">
+            <label className="label">Update Time</label>
+            <div className="control">
+              <input name='updateTimeInput' onChange={(e) => this.handleInput(e)} value={this.state.updateTimeInput} className="input" type="text" placeholder="url" />
+            </div>
+            <p className="help">Time to wait between calls to api, 0 to disable</p>
           </div>
           <div className="field is-grouped">
             <div className="control">
@@ -55,12 +78,10 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-/* function mapStateToProps(state) {
+function mapStateToProps(state) {
   return {
-    loadingMSIProperties: state.propertiesReducer.loadingMSIProperties,
-    errorMSIProperties: state.propertiesReducer.errorMSIProperties,
-    contentMSIProperties: state.propertiesReducer.contentMSIProperties,
+    attemptMSIProperties: state.propertiesReducer.attemptMSIProperties,
   }
-} */
+}
 
-export default connect(null, mapDispatchToProps)(SidebarContent)
+export default connect(mapStateToProps, mapDispatchToProps)(SidebarContent)
