@@ -2,6 +2,7 @@ import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as propertiesActions from '../../store/actions/propertiesActions'
+import * as optionActions from '../../store/actions/optionActions'
 
 class SidebarContent extends React.Component {
 
@@ -33,11 +34,39 @@ class SidebarContent extends React.Component {
     window.localStorage.setItem('settings', JSON.stringify(this.state))
   }
 
+  handleCheckBox(value) {
+    if (this.props.optionsObj[value]) {
+      this.props.actions.removeOption(value)
+    }
+    else {
+      this.props.actions.addOption(value)
+    }
+
+  }
+
   handleForm() {
     this.writeStateToLocalStorage()
     this.props.actions.fetchMSIProperties(this.props.attemptMSIProperties + 1)
     this.props.actions.updateTimeInterval(this.state.updateTimeInput)
-    this.props.closeSidebar()
+  }
+
+  renderMetricsOptions() {
+    //We use the state from the App component so we dont need to iterate a second time
+    let boxOptions = []
+    for (let property in this.props.appState) {
+      if (property !== "sidebarOpen") {
+        boxOptions = [
+          ...boxOptions,
+          <div key={property} className="field">
+            <label className="checkbox">
+              <input checked={this.props.optionsObj[property] ? true : false} onChange={() => this.handleCheckBox(property)} type="checkbox" /> {property}
+            </label>
+          </div>
+        ]
+      }
+    }
+
+    return boxOptions
   }
 
   render() {
@@ -58,12 +87,13 @@ class SidebarContent extends React.Component {
             </div>
             <p className="help">Time to wait between calls to api, 0 to disable</p>
           </div>
+          {this.renderMetricsOptions()}
           <div className="field is-grouped">
             <div className="control">
-              <button onClick={() => this.handleForm()} className="button is-link">Submit</button>
+              <button onClick={() => this.handleForm()} className="button is-link">Fetch</button>
             </div>
             <div className="control">
-              <button onClick={() => this.props.closeSidebar()} className="button is-link is-light">Cancel</button>
+              <button onClick={() => this.props.closeSidebar()} className="button is-link is-light">Close</button>
             </div>
           </div>
         </div>
@@ -74,13 +104,14 @@ class SidebarContent extends React.Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ ...propertiesActions }, dispatch)
+    actions: bindActionCreators({ ...propertiesActions, ...optionActions }, dispatch)
   }
 }
 
 function mapStateToProps(state) {
   return {
     attemptMSIProperties: state.propertiesReducer.attemptMSIProperties,
+    optionsObj: state.optionReducer
   }
 }
 

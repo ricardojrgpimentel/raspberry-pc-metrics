@@ -55,41 +55,35 @@ class App extends React.Component {
   }
 
   renderCircles() {
+    let circleJSX = []
+    for (let circle in this.props.optionsObj) {
+      if (this.state[circle]) {
+        circleJSX = [
+          ...circleJSX,
+          <div key={circle} className="column is-half">
+            <div className="columns">
+              <div className="column is-2">
+                <p className='info-text'>{circle}</p>
+              </div>
+              <div className="column">
+                <CircularProgressbar
+                  className='graph'
+                  value={this.state[circle].data}
+                  text={`${parseFloat(this.state[circle].data).toFixed(1)}${circle.includes("temperature") ? '°C' : '%'}`}
+                />
+              </div>
+            </div>
+          </div>
+        ]
+      }
+    }
+
     return (
       <Fragment>
-        <div className="columns">
-          <div className="column is-half">
-            <div className="columns">
-              <div className="column is-2">
-                <p className='info-text'>CPU Temperature</p>
-              </div>
-              <div className="column">
-                {this.state['CPU temperature'] &&
-                  <CircularProgressbar
-                    className='graph'
-                    value={this.state['CPU temperature'].data}
-                    text={`${parseFloat(this.state['CPU temperature'].data).toFixed(1)}°C`}
-                  />}
-              </div>
-            </div>
-          </div>
-          <div className="column is-half">
-            <div className="columns">
-              <div className="column is-2">
-                <p className='info-text'>RAM Usage</p>
-              </div>
-              <div className="column">
-                {this.state['RAM usage'] &&
-                  <CircularProgressbar
-                    className='graph'
-                    value={(100 * this.state['RAM usage'].data) / this.state['RAM usage'].maxLimit}
-                    text={`${parseFloat((100 * this.state['RAM usage'].data) / this.state['RAM usage'].maxLimit).toFixed(1)}%`}
-                  />}
-              </div>
-            </div>
-          </div>
+        <div className="columns is-multiline">
+          {circleJSX}
         </div>
-        <div className="columns">
+        {/* <div className="columns">
           <div className="column is-half">
             <div className="columns">
               <div className="column is-2">
@@ -126,7 +120,7 @@ class App extends React.Component {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </Fragment>
     )
   }
@@ -162,6 +156,8 @@ function mapStateToProps(state) {
     errorMSIProperties: state.propertiesReducer.errorMSIProperties,
     contentMSIProperties: state.propertiesReducer.contentMSIProperties,
     attemptMSIProperties: state.propertiesReducer.attemptMSIProperties,
+
+    optionsObj: state.optionReducer
   }
 }
 

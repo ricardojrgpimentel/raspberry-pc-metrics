@@ -86,9 +86,9 @@ class Bg extends React.Component {
 
     for (var x = 0; x < Canvas.width; x++) {
       for (var y = 0; y < Canvas.height; y++) {
-        if (Math.round(Math.random() * 8000) == 1) {
+        if (Math.round(Math.random() * 8000) === 1) {
           var s = ((Math.random() * 5) + 1) / 10;
-          if (Math.round(Math.random()) == 1)
+          if (Math.round(Math.random()) === 1)
             elements.push(presets.o(x, y, s, 0, 0));
           else
             elements.push(presets.x(x, y, s, 0, 0, ((Math.random() * 3) - 1) / 10, (Math.random() * 360)));
