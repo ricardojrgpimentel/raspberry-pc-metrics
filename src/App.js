@@ -11,6 +11,7 @@ import SidebarContent from './components/sidebar/SidebarContent'
 import { connect } from 'react-redux'
 import Parser from 'fast-xml-parser'
 import Timer from './components/timer/Timer'
+import { toast } from 'react-toastify'
 
 class App extends React.Component {
   constructor() {
@@ -35,6 +36,11 @@ class App extends React.Component {
         })
       }
     }
+    if (this.props.errorMSIProperties) {
+      toast.error("Error Fetching", {
+        containerId: 'error'
+      })
+    }
   }
 
   handleData(props) {
@@ -56,12 +62,13 @@ class App extends React.Component {
 
   renderCircles() {
     let circleJSX = []
+    let columnSize = Math.round(12 / (Object.keys(this.props.optionsObj).length / 2))
     for (let circle in this.props.optionsObj) {
       if (this.state[circle]) {
         circleJSX = [
           ...circleJSX,
-          <div key={circle} className="column is-half">
-            <div className="columns">
+          <div key={circle} className={`column is-${columnSize}`}>
+            <div className="columns is-mobile">
               <div className="column is-2">
                 <p className='info-text'>{circle}</p>
               </div>
@@ -80,7 +87,7 @@ class App extends React.Component {
 
     return (
       <Fragment>
-        <div className="columns is-multiline">
+        <div className="columns is-multiline is-mobile is-vcentered">
           {circleJSX}
         </div>
         {/* <div className="columns">
