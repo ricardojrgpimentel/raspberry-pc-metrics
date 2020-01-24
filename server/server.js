@@ -18,7 +18,6 @@ app.get('/', (req, res, next) => {
   };
 
   let request = http.request(options, (response) => {
-    console.log("response", response.statusCode)
     let chunks = [];
 
     response.on("data", chunk => {

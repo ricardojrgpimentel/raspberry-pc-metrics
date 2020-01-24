@@ -1,7 +1,13 @@
 import React, { Fragment } from 'react'
 import "./background.css"
-
+import { connect } from 'react-redux'
 class Bg extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+
+    }
+  }
 
   resize() {
     var Canvas = document.getElementById('canvas');
@@ -10,6 +16,29 @@ class Bg extends React.Component {
   };
 
   componentDidMount() {
+    let settings = window.localStorage.getItem('settings')
+    if (settings) {
+      let objSettings = JSON.parse(settings)
+      if (objSettings.backgroundInput !== '') {
+        this.setState({
+          ...this.state,
+          background: objSettings.backgroundInput
+        })
+      }
+      else {
+        this.handleBackgroundCanvas()
+      }
+    }
+    else {
+      this.handleBackgroundCanvas()
+    }
+  }
+
+  /*   componentDidUpdate(prevProps, prevState) {
+      console.log("optionsObj", this.props.optionsObj)
+    } */
+
+  handleBackgroundCanvas() {
     var Canvas = document.getElementById('canvas');
     var ctx = Canvas.getContext('2d');
 
@@ -108,9 +137,17 @@ class Bg extends React.Component {
   render() {
     return (
       <Fragment>
-        <canvas id="canvas"></canvas>
+        {this.state.background ?
+          <div
+            id='canvas'
+            style={{
+              backgroundImage: `url(${this.state.background})`,
+              backgroundPosition: 'center center',
+              backgroundSize: 'cover'
+            }}
+          /> :
+          <canvas id="canvas"></canvas>}
         <div className="child-content">
-          {/* <button onClick={() => this.resize()}>Reload</button> */}
           {this.props.children}
         </div>
       </Fragment>
@@ -118,4 +155,10 @@ class Bg extends React.Component {
   }
 }
 
-export default Bg
+function mapStateToProps(state) {
+  return {
+    optionsObj: state.optionReducer
+  }
+}
+
+export default connect(mapStateToProps)(Bg)
