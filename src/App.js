@@ -69,7 +69,7 @@ class App extends React.Component {
           ...circleJSX,
           <div key={circle} className={`column is-${columnSize}`}>
             <div className="columns is-mobile">
-              <div className="column is-2">
+              <div className="column is-2 is-flex text-column">
                 <p className='info-text'>{circle}</p>
               </div>
               <div className="column">
