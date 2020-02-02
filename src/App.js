@@ -60,6 +60,82 @@ class App extends React.Component {
     return false
   }
 
+  handleText(circle) {
+    let symbolToShow = '%'
+    if (circle.includes("temperature")) {
+      symbolToShow = '°C'
+    } else if (circle.includes("Framerate")) {
+      symbolToShow = 'FPS'
+    }
+    return `${parseFloat(this.state[circle].data).toFixed(1)}${symbolToShow}`
+  }
+
+  hsl_col_perc(percent, start, end) {
+    var a = percent / 100,
+      b = (end - start) * a,
+      c = b + start;
+
+    // Return a CSS HSL string
+    return 'hsl(' + c + ', 100%, 50%)';
+  }
+
+  renderProperGraph(circle) {
+    if (circle.includes("temperature")) {
+      return (
+        <CircularProgressbar
+          className='graph'
+          value={this.state[circle].data}
+          text={this.handleText(circle)}
+          styles={buildStyles({
+            pathColor: this.hsl_col_perc(this.state[circle].data, 100, 0)
+          })}
+        />
+      )
+    } else if (circle.includes("Framerate")) {
+      return (
+        <CircularProgressbar
+          circleRatio={0.75}
+          maxValue={500}
+          styles={buildStyles({
+            rotation: 1 / 2 + 1 / 8,
+            strokeLinecap: "butt",
+            trailColor: "#eee"
+          })}
+          className='graph'
+          value={this.state[circle].data}
+          text={this.handleText(circle)}
+        />
+      )
+    }
+    else if (circle.includes("usage")) {
+      return (
+        <CircularProgressbar
+          circleRatio={0.75}
+          maxValue={100}
+          styles={buildStyles({
+            rotation: 1 / 2 + 1 / 8,
+            strokeLinecap: "butt",
+            trailColor: "#eee",
+          })}
+          className='graph'
+          value={this.state[circle].data}
+          text={this.handleText(circle)}
+        />
+      )
+    }
+    return (
+      <CircularProgressbar
+        className='graph'
+        value={this.state[circle].data}
+        text={this.handleText(circle)}
+        styles={buildStyles({
+          rotation: 0.5 + (1 - this.state[circle].data / 100) / 2,
+          pathColor: `rgba(62, 152, 199, ${this.state[circle].data / 100})`
+        })}
+      />
+    )
+  }
+
   renderCircles() {
     let circleJSX = []
     let columnSize = Math.round(12 / (Object.keys(this.props.optionsObj).length / 2))
@@ -73,11 +149,7 @@ class App extends React.Component {
                 <p className='info-text'>{circle}</p>
               </div>
               <div className="column">
-                <CircularProgressbar
-                  className='graph'
-                  value={this.state[circle].data}
-                  text={`${parseFloat(this.state[circle].data).toFixed(1)}${circle.includes("temperature") ? '°C' : '%'}`}
-                />
+                {this.renderProperGraph(circle)}
               </div>
             </div>
           </div>
