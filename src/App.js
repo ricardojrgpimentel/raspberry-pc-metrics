@@ -162,44 +162,6 @@ class App extends React.Component {
         <div className="columns is-multiline is-mobile is-vcentered">
           {circleJSX}
         </div>
-        {/* <div className="columns">
-          <div className="column is-half">
-            <div className="columns">
-              <div className="column is-2">
-                <p className='info-text'>GPU Temperature</p>
-              </div>
-              <div className="column">
-                {this.state['GPU temperature'] &&
-                  <CircularProgressbar
-                    className='graph'
-                    value={this.state['GPU temperature'].data}
-                    text={`${parseFloat(this.state['GPU temperature'].data).toFixed(1)}°C`}
-                  />}
-              </div>
-            </div>
-          </div>
-          <div className="column is-half">
-            <div className="columns">
-              <div className="column is-2">
-                <p className='info-text'>Fan Speed</p>
-              </div>
-              <div className="column">
-                {this.state['Fan speed'] &&
-                  <CircularProgressbar
-                    className='graph'
-                    circleRatio={0.75}
-                    value={this.state['Fan speed'].data}
-                    text={`${parseInt(this.state['Fan speed'].data, 10)}%`}
-                    styles={buildStyles({
-                      rotation: 1 / 2 + 1 / 8,
-                      strokeLinecap: "butt",
-                      trailColor: "#eee"
-                    })}
-                  />}
-              </div>
-            </div>
-          </div>
-        </div> */}
       </Fragment>
     )
   }
