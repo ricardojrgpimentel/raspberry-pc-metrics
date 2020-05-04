@@ -1,17 +1,21 @@
 {
-  "name": "pcmetrics",
+  "name": "pcdashboardmetrics",
   "version": "0.1.0",
   "private": true,
-  "description": "Dashboard Metrics",
-  "main": "public/electron.js",
+  "description": "PC Dashboard Metrics",
+  "main": "public/main.js",
   "build": {
-    "appId": "com.ricardopimentel.electron-cra",
+    "appId": "com.ricardopimentel.pc-dashboard-metrics",
     "files": [
       "build/**/*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "build/icon.*"
     ],
     "directories": {
       "buildResources": "assets"
+    },
+    "win": {
+      "icon": "./build/icon.png"
     }
   },
   "author": "Ricardo Pimentel",
@@ -48,7 +52,8 @@
     "electron-pack": "build --em.main=build/electron.js",
     "preelectron-pack": "npm run build",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -wl"
+    "dist-windows": "electron-builder -w",
+    "dist-linux": "electron-builder -l"
   },
   "eslintConfig": {
     "extends": "react-app"
