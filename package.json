@@ -6,6 +6,7 @@
   "main": "public/main.js",
   "build": {
     "appId": "com.ricardopimentel.pc-dashboard-metrics",
+    "extends": "null",
     "files": [
       "build/**/*",
       "node_modules/**/*",
@@ -15,6 +16,9 @@
       "buildResources": "assets"
     },
     "win": {
+      "icon": "./build/icon.png"
+    },
+    "linux": {
       "icon": "./build/icon.png"
     }
   },
