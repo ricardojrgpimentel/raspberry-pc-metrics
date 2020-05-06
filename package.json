@@ -6,8 +6,8 @@
   "main": "public/main.js",
   "build": {
     "appId": "com.ricardopimentel.pc-dashboard-metrics",
-    "extends": "null",
     "files": [
+      "dist/**/*",
       "build/**/*",
       "node_modules/**/*",
       "build/icon.*"
