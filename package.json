@@ -53,7 +53,8 @@
     "preelectron-pack": "npm run build",
     "pack": "electron-builder --dir",
     "dist-windows": "electron-builder -w",
-    "dist-linux": "electron-builder -l"
+    "dist-linux": "electron-builder -l",
+    "dist-arm64": "electron-builder --arm64"
   },
   "eslintConfig": {
     "extends": "react-app"
