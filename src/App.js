@@ -9,9 +9,10 @@ import './App.sass'
 import Sidebar from "react-sidebar"
 import SidebarContent from './components/sidebar/SidebarContent'
 import { connect } from 'react-redux'
-import Parser from 'fast-xml-parser'
 import Timer from './components/timer/Timer'
 import { toast } from 'react-toastify'
+import Helpers from './components/helpers/helpers'
+import _ from 'lodash'
 
 class App extends React.Component {
   constructor() {
@@ -45,17 +46,15 @@ class App extends React.Component {
 
   handleData(props) {
     let objEntries = {}
-    if (props.contentMSIProperties && Parser.validate(props.contentMSIProperties)) {
-      let jsonObj = Parser.parse(props.contentMSIProperties)
-      if (jsonObj.HardwareMonitor && jsonObj.HardwareMonitor.HardwareMonitorEntries && jsonObj.HardwareMonitor.HardwareMonitorEntries.HardwareMonitorEntry) {
-        for (let entry in jsonObj.HardwareMonitor.HardwareMonitorEntries.HardwareMonitorEntry) {
-          objEntries = {
-            ...objEntries,
-            [jsonObj.HardwareMonitor.HardwareMonitorEntries.HardwareMonitorEntry[entry].srcName]: jsonObj.HardwareMonitor.HardwareMonitorEntries.HardwareMonitorEntry[entry]
-          }
+    if (props.contentMSIProperties) {
+      let jsonArr = JSON.parse(props.contentMSIProperties)
+      for (let entry in jsonArr.Children[0].Children) {
+        objEntries = {
+          ...objEntries,
+          [jsonArr.Children[0].Children[entry].Text]: jsonArr.Children[0].Children[entry]
         }
-        return objEntries
       }
+      return objEntries
     }
     return false
   }
@@ -80,6 +79,16 @@ class App extends React.Component {
   }
 
   renderProperGraph(circle) {
+    return (
+      <CircularProgressbar
+        className='graph'
+        value={parseFloat(circle)}
+        text={circle}
+        styles={buildStyles({
+          pathColor: this.hsl_col_perc(parseFloat(circle), 100, 0)
+        })}
+      />
+    )
     if (circle.includes("temperature")) {
       return (
         <CircularProgressbar
@@ -138,29 +147,41 @@ class App extends React.Component {
 
   renderCircles() {
     let circleJSX = []
-    let columnSize = Math.round(12 / (Object.keys(this.props.optionsObj).length / 2))
-    for (let circle in this.props.optionsObj) {
-      if (this.state[circle]) {
-        circleJSX = [
-          ...circleJSX,
-          <div key={circle} className={`column is-${columnSize}`}>
-            <div className="columns is-mobile">
+    let topLevelProperties = []
+    for (let topProperty in this.props.optionsObj) {
+      if (!Helpers.oneOfTypes(topProperty)) {
+        topLevelProperties = [...topLevelProperties, topProperty]
+        let valuesObj = _.get(this.state[this.props.optionsObj[topProperty].parentProperty[0]], this.props.optionsObj[topProperty].path)
+        if (valuesObj) {
+          circleJSX = [
+            ...circleJSX,
+            <div key={valuesObj.Value} className="columns is-mobile">
               <div className="column is-2 is-flex text-column">
-                <p className='info-text'>{circle}</p>
+                <p className='info-text'>{valuesObj.Value}</p>
               </div>
               <div className="column">
-                {this.renderProperGraph(circle)}
+                {this.renderProperGraph(valuesObj.Value)}
               </div>
-            </div>
-          </div>
-        ]
+            </div>]
+        }
       }
+    }
+
+    let renderProperty = []
+    for (let property of topLevelProperties) {
+      renderProperty = [
+        ...renderProperty,
+        <div key={property} className='column is-half'>
+          <p className='info-text'>{property}</p>
+          {circleJSX}
+        </div>
+      ]
     }
 
     return (
       <Fragment>
         <div className="columns is-multiline is-mobile is-vcentered">
-          {circleJSX}
+          {renderProperty}
         </div>
       </Fragment>
     )

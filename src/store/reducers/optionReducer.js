@@ -6,7 +6,7 @@ export default function optionReducer(state = initialState.optionReducer, action
     case types.ENABLE_OPTION:
       let options = {
         ...state,
-        [action.option]: true
+        [action.option.name]: action.option
       }
       window.localStorage.setItem('options', JSON.stringify(options))
       return {
@@ -15,10 +15,10 @@ export default function optionReducer(state = initialState.optionReducer, action
     case types.DISABLE_OPTION:
       let oldOptions = {}
       for (let property in state) {
-        if (property !== action.option) {
+        if (property !== action.option.name) {
           oldOptions = {
             ...oldOptions,
-            [property]: true
+            [property]: action.option
           }
         }
       }

@@ -1,0 +1,7 @@
+export const TEMP = "Temperatures"
+export const FAN = "Fans"
+export const CLOCK = "Clocks"
+export const LOAD = "Loads"
+export const POWER = "Powers"
+export const VOLTAGE = "Voltages"
+export const CONTROL = "Controls"

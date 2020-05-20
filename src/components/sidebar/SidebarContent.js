@@ -35,7 +35,7 @@ class SidebarContent extends React.Component {
   }
 
   handleCheckBox(value) {
-    if (this.props.optionsObj[value]) {
+    if (this.props.optionsObj[value.name]) {
       this.props.actions.removeOption(value)
     }
     else {
@@ -50,17 +50,48 @@ class SidebarContent extends React.Component {
     this.props.actions.updateTimeInterval(this.state.updateTimeInput)
   }
 
+  recursiveOptions(properties, propertiesObj) {
+    let boxOptions = []
+    for (let property in properties.Children) {
+      let newPropertiesObj = {
+        name: properties.Children[property].Text,
+        parentProperty: [...propertiesObj.parentProperty, properties.Children[property].Text],
+        path: propertiesObj.path + `${propertiesObj.path ? '.' : ''}Children.${property}`
+      }
+      boxOptions = [
+        ...boxOptions,
+        <div key={properties.Children[property].Text} className="field">
+          <label className="checkbox">
+            <input
+              checked={this.props.optionsObj[properties.Children[property].Text] ? true : false}
+              onChange={() => this.handleCheckBox(newPropertiesObj)} type="checkbox" />
+            {properties.Children[property].Text}
+          </label>
+          <div className="inside-field">
+            {properties.Children[property].Children && this.recursiveOptions(properties.Children[property], newPropertiesObj)}
+          </div>
+        </div>
+      ]
+    }
+
+    return boxOptions
+  }
+
   renderMetricsOptions() {
     //We use the state from the App component so we dont need to iterate a second time
     let boxOptions = []
     for (let property in this.props.appState) {
       if (property !== "sidebarOpen") {
+        let propertiesObj = { name: property, parentProperty: [property], path: '' }
         boxOptions = [
           ...boxOptions,
           <div key={property} className="field">
             <label className="checkbox">
-              <input checked={this.props.optionsObj[property] ? true : false} onChange={() => this.handleCheckBox(property)} type="checkbox" /> {property}
+              <input checked={this.props.optionsObj[property] ? true : false} onChange={() => this.handleCheckBox(propertiesObj)} type="checkbox" /> {property}
             </label>
+            <div className="inside-field">
+              {this.recursiveOptions(this.props.appState[property], propertiesObj)}
+            </div>
           </div>
         ]
       }
@@ -85,7 +116,7 @@ class SidebarContent extends React.Component {
             <div className="control">
               <input name='updateTimeInput' onChange={(e) => this.handleInput(e)} value={this.state.updateTimeInput} className="input" type="text" placeholder="url" />
             </div>
-            <p className="help">Time to wait between calls to api, 0 to disable</p>
+            <p className="help">Time to wait between metrics refresh</p>
           </div>
           {this.renderMetricsOptions()}
           <div className="field is-grouped">
